@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Connection from "./component/Connection";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './style/input.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Cra from './component/Cra';
-import Client from './component/client/Client';
-import Event from './component/event/Event';
-import Contrat from './component/contrat/Contrat';
+import A from './component/A/A';
+import B from './component/B/B';
+import C from './component/C/C';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,11 +16,9 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={<Cra />} />
-          <Route path="client" element={<Client />} />
-          <Route path="event" element={<Event/>} />
-          <Route path="contrat" element={<Contrat />} />
-          <Route path="connexion" element={<Connection />} />
+          <Route index element={<A />} />
+          <Route path="b" element={<B />} />
+          <Route path="c" element={<C/>} />
         </Route>
       </Routes>
     </BrowserRouter>

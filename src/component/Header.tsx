@@ -3,12 +3,10 @@ import { Header as BaseHeader } from "antd/lib/layout/layout";
 import { Menu, Dropdown, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import useConnection from '../hook/useConnection';
 
-const menuKey = ["/", "/client"];
+const menuKey = ["/", "/b", "/c"];
 
 const Header = () => {
-    const {logout} = useConnection();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -20,23 +18,18 @@ const Header = () => {
         },
         {
             key: "0",
-            label: "CRA",
+            label: "A",
             onClick: () => navigate("/"),
         },
         {
             key: "1",
-            label: "Clients",
-            onClick: () => navigate("/client"),
+            label: "B",
+            onClick: () => navigate("/b"),
         },
         {
             key: "2",
-            label: "Evenements",
-            onClick: () => navigate("/event"),
-        },
-        {
-            key: "3",
-            label: "Contrats",
-            onClick: () => navigate("/contrat"),
+            label: "C",
+            onClick: () => navigate("/c"),
         },
     ];
 
@@ -46,7 +39,6 @@ const Header = () => {
             key: "0",
             label: "Déconnexion",
             onClick: () => {
-                logout();
                 navigate("/");
             }
         },
