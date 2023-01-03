@@ -4,9 +4,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './style/input.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import A from './component/A/A';
-import B from './component/B/B';
-import C from './component/C/C';
+import EctsChoice from './component/ects_choice/EctsChoice';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,9 +14,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={<A />} />
-          <Route path="b" element={<B />} />
-          <Route path="c" element={<C/>} />
+          <Route index element={<EctsChoice />} />
         </Route>
       </Routes>
     </BrowserRouter>
