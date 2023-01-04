@@ -23,7 +23,7 @@ const Header = () => {
     return (
         <BaseHeader className="flex items-center shadow-md shadow-gray-300/60">
             <div className="flex-1 border-transparent">
-            Nom du site    Il reste <Timer endTime={new Date("January, 4, 2023")}/>
+            Nom du site    Il reste <Timer endTime={new Date("January, 5, 2023")}/>
             </div>
             
             

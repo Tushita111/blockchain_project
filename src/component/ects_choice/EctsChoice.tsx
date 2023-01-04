@@ -1,7 +1,7 @@
 import { Button, Form, InputNumber, List } from "antd";
 import React, { useEffect, useState } from "react";
 
-interface Courses {
+interface Course {
     name : string;
     ects : number;
 }
@@ -13,15 +13,20 @@ const EctsChoice = () => {
     const [form] = Form.useForm();
     
     const [ectsUsed, setEctsUsed] = useState<number>(0);
-    const [courses, setCourses] = useState<Courses[]>(
+    const [courses, setCourses] = useState<Course[]>(
         coursesName.map((i) => {return {name : i, ects : 0}})
     )
+
+    // when the count of ects change, we revalidate the field
+    useEffect(() => {
+        form.validateFields();
+    }, [ectsUsed, form])
 
     // when the courses change, we update the count of ects
     useEffect(() => {
         setEctsUsed(
             courses.reduce(
-                (previous : number, current : Courses) => previous + current.ects,
+                (previous : number, current : Course) => previous + current.ects,
                 0
             )
         )
@@ -48,8 +53,20 @@ const EctsChoice = () => {
     }
 
 
+    const onFinish = (values: any) => {
+        console.log('Received values of form: ', values);
+    };
+
+
     return (
-        <Form form={form} layout="horizontal">
+        <Form 
+            form={form}
+            initialValues={
+                // transform the array of course in an object like : {name : ects}
+                coursesName.reduce((object, course) => ({ ...object, [course]: 0}), {}) 
+            }
+            onFinish={onFinish}
+        >
             <List
                 size="small"
                 header={<div><strong>list of course</strong> - {ectsUsed} ECTS used for a maximum of {maxEcts}</div>}
@@ -57,18 +74,30 @@ const EctsChoice = () => {
                 dataSource={courses}
                 renderItem={(item) => 
                     <List.Item>
-                        {item.name} - 
-                        <Form.Item name={item.name} rules={[{ required: true }]}>
+                        <Form.Item 
+                            label={item.name + " - "}
+                            name={item.name} 
+                            rules={[
+                                { required: true },
+                                {
+                                    validator: () =>
+                                    ectsUsed <= maxEcts ? Promise.resolve() : Promise.reject(new Error('The count of ECTS must be under ' + maxEcts)),
+                                }
+                            ]} 
+                            
+                        >
                             <InputNumber 
+                                name={item.name}
                                 min={0} 
-                                max={10} 
-                                defaultValue={0} 
+                                max={maxEcts}
                                 onChange={(value) => ectsChange(value, item.name)} 
-                            /> 
-                        </Form.Item>
-                        
-                        ECTS
-                    </List.Item>}
+                            />
+                            <span style={{ marginLeft: 8 }}>
+                            ECTS
+                            </span> 
+                        </Form.Item>  
+                    </List.Item>
+                }
             />
 
             <Form.Item>
