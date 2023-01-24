@@ -1,5 +1,6 @@
 import { List } from "antd";
 import { useEffect, useState } from "react";
+import Timer from "../Timer";
 import Ects from "./Ects";
 
 interface Course {
@@ -36,17 +37,33 @@ const EctsChoice = () => {
     }
 
     return (
-        <List
-            size="small"
-            header={<div><strong>list of course</strong> - {ectsUsed} ECTS used for a maximum of {maxEcts}</div>}
-            bordered
-            dataSource={courses}
-            renderItem={(item) => 
-                <List.Item>
-                    <Ects maxEcts={maxEcts} name={item.name} ectsAlreadyUsed={ectsUsed} initialEcts={item.ects} ectsChange={ectsChange}></Ects>
-                </List.Item>
-            }
-        />
+        <div>
+            {/*
+                attached the timer at the top of the screen
+            */}
+            <div style={{position : "fixed", top : 60, right : 10}}>
+                <Timer endTime={new Date("2023-12-31T23:59:59")}></Timer>
+            </div>
+            <List
+                grid={{ 
+                    gutter: 10,
+                    xs: 1,
+                    sm: 2,
+                    md: 4,
+                    lg: 4,
+                    xl: 6,
+                    xxl: 8, 
+                }}
+                header={<div><strong>list of course</strong> - {ectsUsed} ECTS used for a maximum of {maxEcts}</div>}
+                bordered
+                dataSource={courses}
+                renderItem={(item) => 
+                    <List.Item>
+                        <Ects maxEcts={maxEcts} name={item.name} ectsAlreadyUsed={ectsUsed} initialEcts={item.ects} ectsChange={ectsChange}></Ects>
+                    </List.Item>
+                }
+            />
+        </div>
     )
 }
 

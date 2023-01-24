@@ -9,7 +9,7 @@ const Timer = ({endTime} : props) => {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(1);
 
   const getTime = useCallback(() => {
     const time = endTime.getTime() - Date.now();
@@ -27,9 +27,15 @@ const Timer = ({endTime} : props) => {
   }, [getTime]);
 
   return (
-    <span className="timer">
-      {hours}:{minutes}:{seconds}
-    </span>
+    // make a div with the time which is 40px height and 100px width, 
+    // with a border radius of 20px, a grey background and a white text, centered, and on all other elements, center them
+    <div className="h-10 w-40 bg-gray-300 rounded-2xl flex items-center justify-center" style={{zIndex : 99}}>
+      <div className="text-white">
+        {days}d {hours}h {minutes}m {seconds}s
+      </div>
+    </div>
+
+    
   );
 };
 

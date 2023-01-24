@@ -4,7 +4,6 @@ import type { MenuProps } from 'antd';
 import { Dropdown } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import Timer from "./Timer";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -23,9 +22,8 @@ const Header = () => {
     return (
         <BaseHeader className="flex items-center shadow-md shadow-gray-300/60">
             <div className="flex-1 border-transparent">
-            Nom du site    Il reste <Timer endTime={new Date("January, 5, 2023")}/>
+            Nom du site
             </div>
-            
             
             <Dropdown menu={{items : dropdownItems}} trigger={["click"]}>
                 <UserOutlined className="text-lg" />
