@@ -5,3 +5,38 @@
 
 @layout-header-background: #ffffff;
 @layout-header-height: 56px;
+
+// token card
+.TokenCard {
+    .ant-card-body {
+        width : 200px; 
+        height : 350px; 
+        display : flex; // allow the body to use all the space
+        flex-direction : column;
+
+        .TokenTitle {
+            text-align : center;
+            font-size : 18px;
+            font-weight : bold;
+        }
+
+        .TokenBody {
+            flex : 1; // use all the space
+            position : relative; // allow the content to be absolute bottom positioned 
+
+            .TokenContent {
+                position : absolute; // align to the bottom of the body
+                bottom : 0;
+                left : 0;
+                
+                width : 100%; 
+
+                text-align : center;
+
+                img {
+                    width : 100%;
+                }
+            }
+        }
+    }
+}
