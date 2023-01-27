@@ -62,7 +62,7 @@ const TokenChoice = () => {
             {/*
                 attached the timer at the top of the screen
             */}
-            <div style={{position : "fixed", top : 60, right : 10}}>
+            <div className="TimerDiv">
                 <Timer endTime={new Date("2023-12-31T23:59:59")}></Timer>
             </div>
             <List
@@ -80,7 +80,7 @@ const TokenChoice = () => {
                 dataSource={courses}
                 renderItem={(item) => 
                     <List.Item>
-                        <Token maxToken={maxToken} name={item.name} tokenAlreadyUsed={tokenUsed} initialToken={item.token} tokenChange={tokenChange}></Token>
+                        <Token maxToken={maxToken} name={item.name} tokenAlreadyUsedWithoutThisCourse={tokenUsed - item.token} initialToken={item.token} tokenChange={tokenChange}></Token>
                     </List.Item>
                 }
             />

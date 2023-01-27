@@ -29,7 +29,7 @@ const Timer = ({endTime} : props) => {
   return (
     // make a div with the time which is 40px height and 100px width, 
     // with a border radius of 20px, a grey background and a white text, centered, and on all other elements, center them
-    <div className="h-10 w-40 bg-gray-300 rounded-2xl flex items-center justify-center" style={{zIndex : 99}}>
+    <div className="h-10 w-40 bg-gray-300 rounded-2xl flex items-center justify-center">
       <div className="text-white">
         {days}d {hours}h {minutes}m {seconds}s
       </div>
