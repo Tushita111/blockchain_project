@@ -65,7 +65,7 @@ contract CourseSelectionSystem{
         }
     }
 
-    function isInList(address studentAddr, uint _courseId) private view returns(bool){//check if one student has already bid for this course
+    function isInList(address studentAddr, uint _courseId) public view returns(bool){//check if one student has already bid for this course
         for(uint i=0; i<recordInfo[_courseId].Nstudent;i++){
             if(recordBid[_courseId][i].addr==studentAddr){
                 return true;
