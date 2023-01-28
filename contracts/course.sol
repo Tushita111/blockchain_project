@@ -33,6 +33,16 @@ contract CourseSelectionSystem{
     modifier isAdmin(){//check if the action is legal
         if (msg.sender == admin) _;
     }
+    
+    function getCourseList(address student_addr) public view returns (bool[] memory) {
+        bool[] memory courseList = new bool[](courseCount);
+        for(uint i=0;i<courseCount;i++){
+            if(isInList(student_addr,i)){
+                courseList[i] = true;
+            }
+        }
+        return courseList;
+	}
 
     function addCourse(string memory _name, uint _Nstudent, uint _duration) public isAdmin {
         CourseInfo memory course = CourseInfo(
