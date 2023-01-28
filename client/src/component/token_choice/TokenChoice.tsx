@@ -1,12 +1,14 @@
 import { List } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Timer from "../Timer";
 import Token from "./Token";
+import { useSearchParams } from "react-router-dom";
 
 interface Course {
     name : string;
     token : number;
 }
+
 // genere a list of 15 courses of information system
 const coursesName: string[] = [
     "Introduction to Computer Engineering",
@@ -33,10 +35,15 @@ const coursesName: string[] = [
 const maxToken = 20;
 
 const TokenChoice = () => {
+    const [searchParams, ] = useSearchParams();
     const [courses, setCourses] = useState<Course[]>(coursesName.map((courseName) => {return {name : courseName, token : 0} as Course}));
     const [tokenUsed, setTokenUsed] = useState<number>(0);
-
     
+    const address = useMemo(
+        () => searchParams.get("address"),
+        [searchParams]
+    );
+
     // when the count of token for a course change, we update the state to recalculate the token used
     useEffect(() => {
         setTokenUsed(courses.reduce((acc, course) => acc + course.token, 0));
@@ -59,31 +66,36 @@ const TokenChoice = () => {
 
     return (
         <div>
-            {/*
-                attached the timer at the top of the screen
-            */}
-            <div className="TimerDiv">
-                <Timer endTime={new Date("2023-12-31T23:59:59")}></Timer>
-            </div>
-            <List
-                grid={{ 
-                    gutter: 10,
-                    xs: 1,
-                    sm: 2,
-                    md: 4,
-                    lg: 4,
-                    xl: 6,
-                    xxl: 8, 
-                }}
-                header={<div><strong>list of course</strong> - {tokenUsed} tokens used for a maximum of {maxToken}</div>}
-                bordered
-                dataSource={courses}
-                renderItem={(item) => 
-                    <List.Item>
-                        <Token maxToken={maxToken} name={item.name} tokenAlreadyUsedWithoutThisCourse={tokenUsed - item.token} initialToken={item.token} tokenChange={tokenChange}></Token>
-                    </List.Item>
-                }
-            />
+            {address && <>
+                <div className="TimerDiv">
+                    <Timer endTime={new Date("2023-12-31T23:59:59")}></Timer>
+                </div>
+                <List
+                    grid={{ 
+                        gutter: 10,
+                        xs: 1,
+                        sm: 2,
+                        md: 4,
+                        lg: 4,
+                        xl: 6,
+                        xxl: 8, 
+                    }}
+                    header={<div><strong>list of course</strong> - {tokenUsed} tokens used for a maximum of {maxToken}</div>}
+                    bordered
+                    dataSource={courses}
+                    renderItem={(item) => 
+                        <List.Item>
+                            <Token maxToken={maxToken} name={item.name} tokenAlreadyUsedWithoutThisCourse={tokenUsed - item.token} initialToken={item.token} tokenChange={tokenChange}></Token>
+                        </List.Item>
+                    }
+                />
+            </>}
+            {
+                !address && 
+                <div className="NotConnected">
+                    <h1>You are not connected to the blockchain</h1>
+                </div>
+            }
         </div>
     )
 }

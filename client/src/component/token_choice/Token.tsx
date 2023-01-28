@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Card, Form, InputNumber } from "antd";
 import { useEffect } from "react";
+import useContractInteraction from "../../hook/useContractInteraction";
 
 interface TokenProps {
     maxToken : number;
@@ -19,6 +20,14 @@ interface TokenProps {
 
 const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken, tokenChange} : TokenProps) => {
     const [form] = Form.useForm();
+    const [isAlreadyBid, setIsAlreadyBid] = React.useState(false);
+    const contractInteraction = useContractInteraction();
+
+    useEffect(() => {
+        contractInteraction.isAlreadyBid(0).then((isAlreadyBid) => {
+            setIsAlreadyBid(isAlreadyBid ? isAlreadyBid : false);
+        })
+    }, [contractInteraction])
 
     // when the count of token change, we revalidate the field
     useEffect(() => {
@@ -27,6 +36,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
+        contractInteraction.bidCourse(0, values[name]);
     };
 
     return (
@@ -35,6 +45,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
             layout="inline"
             onFinish={onFinish}
             initialValues={{[name] : initialToken}}
+            disabled={isAlreadyBid}
         >
             <Card className="TokenCard">
                 <h1 className="TokenTitle">{name}</h1>
@@ -60,7 +71,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
                             />
                         </Form.Item> 
                         <Form.Item>
-                            <Button type="primary">Submit</Button>
+                            <Button type="primary" htmlType="submit">Submit</Button>
                         </Form.Item>
 
                         <img src="/footer.png" alt="footer"></img>
