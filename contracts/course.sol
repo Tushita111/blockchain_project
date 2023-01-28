@@ -22,7 +22,7 @@ contract CourseSelectionSystem{
     }
 
     //initialization of course name, limit of duration(min), limit of #student in this course
-    constructor() {
+    constructor() public {
         admin=msg.sender;
         courseCount = 0;
         addCourse("ALIA",5,10);

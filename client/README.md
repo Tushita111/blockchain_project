@@ -6,3 +6,5 @@ npm install
 Then run the project with :
 npm run start
 
+# to connect to ganache
+https://github.com/smartcontractkit/full-blockchain-solidity-course-js/discussions/34
