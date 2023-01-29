@@ -4,6 +4,8 @@ pragma solidity>=0.5.2;
 contract CourseSelectionSystem{
     address public admin;
     uint public courseCount;
+    uint public startTime
+    uint public duration;//unit:minute
     mapping(uint=>CourseInfo) public recordInfo;//store information for course
     mapping(uint=>mapping(uint=>rankListElement)) recordBid;//store information for bid
 
@@ -16,27 +18,24 @@ contract CourseSelectionSystem{
         uint courseId;
         string courseName;
         uint Nstudent;
-        uint256 startTime;
-        uint256 duration;//unit:minute
         bool isFinshed; 
     }
 
     //initialization of course name, limit of duration(min), limit of #student in this course
-    constructor() public {
+    constructor(uint _duration) {
+        startTime = block.timestamp;
+        duration = _duration;
         admin=msg.sender;
         courseCount = 0;
-        addCourse("ALIA",5,10);
-        addCourse("DBMS",2,10);
-        // addCourse("OT4",20,10);
     }
 
     modifier isAdmin(){//check if the action is legal
         if (msg.sender == admin) _;
     }
-    
+
     function getCourseList(address student_addr) public view returns (bool[] memory) {
-        bool[] memory courseList = new bool[](courseCount);
-        for(uint i=0;i<courseCount;i++){
+        bool[] memory courseList = new bool[](courseCount-1);
+        for(uint i=0;i<courseCount-1;i++){
             if(isInList(student_addr,i)){
                 courseList[i] = true;
             }
@@ -44,23 +43,16 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
-    function addCourse(string memory _name, uint _Nstudent, uint _duration) public isAdmin {
+
+    function addCourse(string memory _name, uint _Nstudent) public isAdmin {
         CourseInfo memory course = CourseInfo(
             courseCount,
             _name, 
-            _Nstudent, 
-            block.timestamp, 
-            _duration, 
+            _Nstudent,
             false
         );
         recordInfo[courseCount] = course;
-
-        for(uint i=0;i<_Nstudent;i++){
-            recordBid[courseCount][i] = rankListElement(admin,0);
-        }
-
         courseCount+=1;
-
     }
 
     function sortRankingList(uint _courseId) private {//used for sorting bid information
@@ -75,7 +67,7 @@ contract CourseSelectionSystem{
         }
     }
 
-    function isInList(address studentAddr, uint _courseId) public view returns(bool){//check if one student has already bid for this course
+    function isInList(address studentAddr, uint _courseId) private view returns(bool){//check if one student has already bid for this course
         for(uint i=0; i<recordInfo[_courseId].Nstudent;i++){
             if(recordBid[_courseId][i].addr==studentAddr){
                 return true;
@@ -88,7 +80,7 @@ contract CourseSelectionSystem{
     function bid_course(uint _courseId) public payable returns(bool){//return if the transaction succeed
         require(!isInList(msg.sender,_courseId),"You've already bid for this course.");
         require(msg.value>0,"You must bid a number greater than 0.");
-        require(block.timestamp<=recordInfo[_courseId].startTime+recordInfo[_courseId].duration*60,"Time is up.");
+        require(block.timestamp<=startTime+duration*60,"Time is up.");
         require(!recordInfo[_courseId].isFinshed,"The selection is finished for this course.");
         
         if (msg.value > recordBid[_courseId][recordInfo[_courseId].Nstudent-1].amount){
@@ -102,9 +94,17 @@ contract CourseSelectionSystem{
     
     function endSelection(uint _courseId) public payable isAdmin {
         CourseInfo storage courseinfo = recordInfo[_courseId];
-        require(block.timestamp>courseinfo.startTime+courseinfo.duration*60,"Can't close the selection in advance.");
+        require(block.timestamp>startTime+duration*60,"Can't close the selection in advance.");
         require(!courseinfo.isFinshed,"The selection is already finished.");
         courseinfo.isFinshed=true;
     }
 
+    //for debug
+    event Test(uint256 w);
+    function test(uint _courseId) public{
+        CourseInfo storage courseinfo = recordInfo[_courseId];
+        for(uint256 i=0;i<courseinfo.Nstudent;i++){
+            emit Test(recordBid[_courseId][i].amount);
+        }
+    }
 }
