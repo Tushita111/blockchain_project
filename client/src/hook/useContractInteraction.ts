@@ -20,6 +20,8 @@ interface ContractInteractionInterface {
     // contract interaction with user (not doing anything if no address is set)
     bidCourse(courseId: number, bidPrice: number): Promise<void>;
     isAlreadyBid(courseId: number): Promise<boolean | null>;
+
+    getConfirmedCourseList(): Promise<boolean[]>;
     // set a new address
     setNewAddress(address : string) : Promise<boolean>;
     isAddressSet() : boolean;
@@ -79,6 +81,17 @@ function useContractInteraction() : ContractInteractionInterface {
                 return null;
             }
         };
+
+        const getConfirmedCourseList = async () => {
+            if(address && await checkAddress(address)){
+                const courseConfirmed = await contract.methods.getCourseList(address).call();
+                return courseConfirmed as boolean[];
+            }else{
+                searchParams.delete("address");
+                setSearchParams(searchParams);
+                return [];
+            }
+        };
     
         const setNewAddress = async (address : string) => {
             let accounts = await web3.eth.requestAccounts();
@@ -100,8 +113,11 @@ function useContractInteraction() : ContractInteractionInterface {
 
         return {
             address,
+
             bidCourse,
             isAlreadyBid,
+            getConfirmedCourseList,
+
             setNewAddress,
             isAddressSet,
             getAddress

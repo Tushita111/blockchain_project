@@ -30,10 +30,11 @@ const coursesName: string[] = [
   ];
 const maxToken = 20;
 
+export const coursesInfo : CourseInfo[] = coursesName.map((courseName, index) => {return {courseId : index, courseName : courseName, token : 0} as CourseInfo});
 
 const TokenChoice = () => {
     const [searchParams, ] = useSearchParams();
-    const [courses, setCourses] = useState<CourseInfo[]>(coursesName.map((courseName, index) => {return {courseId : index, courseName : courseName, token : 0} as CourseInfo}));
+    const [courses, setCourses] = useState<CourseInfo[]>(coursesInfo);
     const [tokenUsed, setTokenUsed] = useState<number>(0);
     
     const address = useMemo(

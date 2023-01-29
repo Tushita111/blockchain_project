@@ -5,6 +5,7 @@ import './style/input.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import TokenChoice from './component/token_choice/TokenChoice';
+import TokenAttribution from './component/token_attribution/TokenAttribution';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,6 +16,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<TokenChoice />} />
+          <Route path="result" element={<TokenAttribution />} />
         </Route>
       </Routes>
     </BrowserRouter>

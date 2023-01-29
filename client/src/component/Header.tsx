@@ -1,17 +1,48 @@
 import React, { useState } from "react";
 import { Header as BaseHeader } from "antd/lib/layout/layout";
-import { Alert, Button, Form, Input, MenuProps, Modal } from 'antd';
+import { Alert, Button, Form, Input, Menu, MenuProps, Modal } from 'antd';
 import { Dropdown } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import useContractInteraction from "../hook/useContractInteraction";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+
+const menuKey = ["/", "/result"];
 
 const Header = () => {
     const [form] = Form.useForm();
     const [searchParams, setSearchParams] = useSearchParams();
     const [cannotConnectToMetaMask, setCannotConnectToMetaMask] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
     const contractInteraction = useContractInteraction();
+
+    const navigationItems: MenuProps["items"] = [
+        {
+            key: "-1",
+            label: "",
+        },
+        {
+            key: "0",
+            label: "home",
+            onClick: () => navigate(
+                {
+                    pathname: '/',
+                    search: searchParams.toString(),
+                }
+            ),
+        },
+        {
+            key: "1",
+            label: "result",
+            onClick: () => navigate(
+                {
+                    pathname: '/result',
+                    search: searchParams.toString(),
+                }
+            ),
+        },
+    ];
 
     // user menu
     const dropdownItems: MenuProps['items'] = [
@@ -54,9 +85,12 @@ const Header = () => {
     return (
         <>
             <BaseHeader className="flex items-center shadow-md shadow-gray-300/60">
-                <div className="flex-1 border-transparent">
-                Nom du site
-                </div>
+                <Menu
+                    mode="horizontal"
+                    selectedKeys={[menuKey.indexOf(location.pathname).toString()]}
+                    className="flex-1 border-transparent"
+                    items={navigationItems}
+                ></Menu>
                 
                 <Dropdown menu={{items : dropdownItems}} trigger={["click"]}>
                     <UserOutlined className="text-lg" />
