@@ -4,6 +4,7 @@ import Timer from "../Timer";
 import Token from "./Token";
 import { useSearchParams } from "react-router-dom";
 import { CourseInfo } from "../../interfaces/CourseInfo";
+import useContractInteraction from "../../hook/useContractInteraction";
 
 // genere a list of 15 courses of information system
 const coursesName: string[] = [
@@ -36,15 +37,29 @@ const TokenChoice = () => {
     const [searchParams, ] = useSearchParams();
     const [courses, setCourses] = useState<CourseInfo[]>(coursesInfo);
     const [tokenUsed, setTokenUsed] = useState<number>(0);
+    const contractInteraction = useContractInteraction();
     
     const address = useMemo(
         () => searchParams.get("address"),
         [searchParams]
     );
 
+    useEffect(() => {
+        if(address) {
+            contractInteraction.getCourseBidList().then((courseBidList) => {
+                setCourses(oldCourse => 
+                    oldCourse.map((course, index) => {
+                        const courseBid = +courseBidList[index];
+                        return {courseId : course.courseId, courseName : course.courseName, token : courseBid} as CourseInfo;
+                    })
+                );
+            });
+        }
+    }, [address, contractInteraction])
+
     // when the count of token for a course change, we update the state to recalculate the token used
     useEffect(() => {
-        setTokenUsed(courses.reduce((acc, course) => acc + course.token, 0));
+        setTokenUsed(courses.reduce((acc, course) => acc + course.token , 0) as number);
     }, [courses])
 
     /**

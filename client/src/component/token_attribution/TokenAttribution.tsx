@@ -28,7 +28,7 @@ const TokenAttribution = () => {
 
     return (
         <List
-            header={<div><strong>list of applied course</strong></div>}
+            header={<div><strong>list of your course</strong></div>}
             bordered
             dataSource={courses}
             renderItem={(item) => 

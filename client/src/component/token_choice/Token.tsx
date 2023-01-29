@@ -26,7 +26,6 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
 
     useEffect(() => {
         contractInteraction.isAlreadyBid(courseId).then((isAlreadyBid) => {
-            console.log("isAlreadyBid", isAlreadyBid);
             setIsAlreadyBid(isAlreadyBid ? isAlreadyBid : false);
         })
     }, [contractInteraction, courseId])
@@ -37,7 +36,6 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
     }, [tokenAlreadyUsedWithoutThisCourse, form])
 
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
         contractInteraction.bidCourse(courseId, values[name]);
         setIsAlreadyBid(true);
     };
@@ -52,6 +50,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
         >
             <Card className="TokenCard">
                 <h1 className="TokenTitle">{name}</h1>
+                {isAlreadyBid && <h2>You already bid for this course {initialToken} tokens.</h2>}
                 <div className="TokenBody">
                     <div className="TokenContent">
                         <Form.Item 

@@ -43,6 +43,17 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
+    function getCourseBidList(address student_addr) public view returns (uint[] memory) {
+        uint[] memory courseList = new uint[](courseCount);
+        for(uint i=0;i<courseCount;i++){
+            for(uint j=0;j<recordInfo[i].Nstudent;j++){
+                if(isInList(student_addr,i) && recordBid[i][j].addr==student_addr){
+                    courseList[i] = recordBid[i][j].amount;
+                }
+            }
+        }
+        return courseList;
+	}
 
     function addCourse(string memory _name, uint _Nstudent) public isAdmin {
         CourseInfo memory course = CourseInfo(
