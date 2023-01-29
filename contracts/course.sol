@@ -4,7 +4,7 @@ pragma solidity>=0.5.2;
 contract CourseSelectionSystem{
     address public admin;
     uint public courseCount;
-    uint public startTime
+    uint public startTime;
     uint public duration;//unit:minute
     mapping(uint=>CourseInfo) public recordInfo;//store information for course
     mapping(uint=>mapping(uint=>rankListElement)) recordBid;//store information for bid
