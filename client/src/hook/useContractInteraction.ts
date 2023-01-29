@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Web3 from "web3";
 import contractInfo from "../CourseSelectionSystem.json";
-import { CourseInfoContract } from "../interfaces/CourseInfoContract";
 
 
 interface ContractInfoInterface {
@@ -18,8 +17,6 @@ interface ContractInfoInterface {
 
 interface ContractInteractionInterface {
     address: string | null;
-    // contract interaction
-    getContractsInfo(): Promise<CourseInfoContract>;
     // contract interaction with user (not doing anything if no address is set)
     bidCourse(courseId: number, bidPrice: number): Promise<void>;
     isAlreadyBid(courseId: number): Promise<boolean | null>;
@@ -63,11 +60,6 @@ function useContractInteraction() : ContractInteractionInterface {
     const returnValue = useMemo(() => {
         const contract = new web3.eth.Contract(contractAbi as any, contractAddress);
 
-        const getContractsInfo = async () => {
-            const courseInfo = await contract.methods.getCourseInfo().call();
-            return courseInfo as CourseInfoContract;
-        };
-    
         const bidCourse = async (courseId: number, bidPrice: number) => {
             if(address && await checkAddress(address)){
                 await contract.methods.bid_course(courseId).send({from: address, value: bidPrice});;
@@ -108,7 +100,6 @@ function useContractInteraction() : ContractInteractionInterface {
 
         return {
             address,
-            getContractsInfo,
             bidCourse,
             isAlreadyBid,
             setNewAddress,

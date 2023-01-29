@@ -6,6 +6,7 @@ import useContractInteraction from "../../hook/useContractInteraction";
 interface TokenProps {
     maxToken : number;
     name : string;
+    courseId : number;
     initialToken : number;
     tokenAlreadyUsedWithoutThisCourse : number;
 
@@ -18,16 +19,17 @@ interface TokenProps {
     tokenChange : (value : number, name : string) => void;
 }
 
-const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken, tokenChange} : TokenProps) => {
+const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken, tokenChange, courseId} : TokenProps) => {
     const [form] = Form.useForm();
     const [isAlreadyBid, setIsAlreadyBid] = React.useState(false);
     const contractInteraction = useContractInteraction();
 
     useEffect(() => {
-        contractInteraction.isAlreadyBid(0).then((isAlreadyBid) => {
+        contractInteraction.isAlreadyBid(courseId).then((isAlreadyBid) => {
+            console.log("isAlreadyBid", isAlreadyBid);
             setIsAlreadyBid(isAlreadyBid ? isAlreadyBid : false);
         })
-    }, [contractInteraction])
+    }, [contractInteraction, courseId])
 
     // when the count of token change, we revalidate the field
     useEffect(() => {
@@ -36,7 +38,8 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
-        contractInteraction.bidCourse(0, values[name]);
+        contractInteraction.bidCourse(courseId, values[name]);
+        setIsAlreadyBid(true);
     };
 
     return (
@@ -44,7 +47,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
             form={form}
             layout="inline"
             onFinish={onFinish}
-            initialValues={{[name] : initialToken}}
+            initialValues={{[name] : initialToken ? initialToken : 0}}
             disabled={isAlreadyBid}
         >
             <Card className="TokenCard">

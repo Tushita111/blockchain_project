@@ -3,11 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Timer from "../Timer";
 import Token from "./Token";
 import { useSearchParams } from "react-router-dom";
-
-interface Course {
-    name : string;
-    token : number;
-}
+import { CourseInfo } from "../../interfaces/CourseInfo";
 
 // genere a list of 15 courses of information system
 const coursesName: string[] = [
@@ -19,7 +15,7 @@ const coursesName: string[] = [
     "Microprocessors and Microcontroller Systems",
     "Computer Networks",
     "Operating Systems",
-    "Database Systems",
+    /*"Database Systems",
     "Software Engineering",
     "Computer Architecture",
     "Computer Graphics",
@@ -30,13 +26,14 @@ const coursesName: string[] = [
     "Computer Vision",
     "Machine Learning",
     "Robotics",
-    "Computer-Aided Design (CAD)"
+    "Computer-Aided Design (CAD)"*/
   ];
 const maxToken = 20;
 
+
 const TokenChoice = () => {
     const [searchParams, ] = useSearchParams();
-    const [courses, setCourses] = useState<Course[]>(coursesName.map((courseName) => {return {name : courseName, token : 0} as Course}));
+    const [courses, setCourses] = useState<CourseInfo[]>(coursesName.map((courseName, index) => {return {courseId : index, courseName : courseName, token : 0} as CourseInfo}));
     const [tokenUsed, setTokenUsed] = useState<number>(0);
     
     const address = useMemo(
@@ -56,8 +53,8 @@ const TokenChoice = () => {
      */
     const tokenChange = (value : number, name : string ) => {
         const newCourses = courses.map((course) => {
-            if(course.name === name) {
-                return {name : course.name, token : value} as Course;
+            if(course.courseName === name) {
+                return {courseId : course.courseId, courseName : course.courseName, token : value} as CourseInfo;
             }
             return course;
         });
@@ -85,7 +82,7 @@ const TokenChoice = () => {
                     dataSource={courses}
                     renderItem={(item) => 
                         <List.Item>
-                            <Token maxToken={maxToken} name={item.name} tokenAlreadyUsedWithoutThisCourse={tokenUsed - item.token} initialToken={item.token} tokenChange={tokenChange}></Token>
+                            <Token courseId={item.courseId} maxToken={maxToken} name={item.courseName} tokenAlreadyUsedWithoutThisCourse={tokenUsed - item.token} initialToken={item.token} tokenChange={tokenChange}></Token>
                         </List.Item>
                     }
                 />
