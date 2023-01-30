@@ -24,6 +24,7 @@ interface ContractInteractionInterface {
 
     getConfirmedCourseList(): Promise<boolean[]>;
     getCourseBidList(): Promise<number[]>;
+    getCourseCid(courseId: number): Promise<string | null>;
     // set a new address
     setNewAddress(address : string) : Promise<boolean>;
     isAddressSet() : boolean;
@@ -96,6 +97,17 @@ function useContractInteraction() : ContractInteractionInterface {
             }
         };
 
+        const getCourseCid = async (courseId : number) => {
+            if(address && await checkAddress(address)){
+                const cid = await contract.methods.getImageCid(courseId).call();
+                return cid as string;
+            }else{
+                searchParams.delete("address");
+                setSearchParams(searchParams);
+                return null;
+            }
+        };
+
         const getCourseBidList = async () => {
             if(address && await checkAddress(address)){
                 const courseConfirmed = await contract.methods.getCourseBidList(address).call();
@@ -144,6 +156,7 @@ function useContractInteraction() : ContractInteractionInterface {
             isAlreadyBid,
             getConfirmedCourseList,
             getCourseBidList,
+            getCourseCid,
 
             setNewAddress,
             isAddressSet,

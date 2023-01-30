@@ -8,11 +8,11 @@ import useContractInteraction from "../../hook/useContractInteraction";
 
 // genere a list of 15 courses of information system
 const coursesName: string[] = [
-    "Introduction to Computer Engineering",
-    "Computer Organization and Architecture",
+    "Cryptography",
+    "Database",
     "Programming in C and C++",
     "Data Structures and Algorithms",
-    "Digital Logic Design",
+    "Machine learning",
     "Microprocessors and Microcontroller Systems",
     "Computer Networks",
     "Operating Systems",
@@ -93,6 +93,7 @@ const TokenChoice = () => {
                         xl: 6,
                         xxl: 8, 
                     }}
+                    style={{height : "100%"}}
                     header={<div><strong>list of course</strong> - {tokenUsed} tokens used for a maximum of {maxToken}</div>}
                     bordered
                     dataSource={courses}

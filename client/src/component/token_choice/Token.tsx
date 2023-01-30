@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Form, InputNumber } from "antd";
 import { useEffect } from "react";
 import useContractInteraction from "../../hook/useContractInteraction";
@@ -21,6 +21,7 @@ interface TokenProps {
 
 const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken, tokenChange, courseId} : TokenProps) => {
     const [form] = Form.useForm();
+    const [img, setImg] = useState<string>();
     const [isAlreadyBid, setIsAlreadyBid] = React.useState(false);
     const contractInteraction = useContractInteraction();
 
@@ -28,6 +29,20 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
         contractInteraction.isAlreadyBid(courseId).then((isAlreadyBid) => {
             setIsAlreadyBid(isAlreadyBid ? isAlreadyBid : false);
         })
+    }, [contractInteraction, courseId])
+
+    // get the img of the token
+    // https://stackoverflow.com/questions/73678855/fetch-and-display-image-from-api-react#:~:text=To%20fetch%20image%20from%20API,can%20use%20the%20fetch%20function.&text=We%20call%20fetch%20with%20the,response%20object%20to%20a%20blob.
+    useEffect(() => {
+        const fetchImage = async () => {
+            const cid = await contractInteraction.getCourseCid(courseId);
+            const imageUrl = `http://localhost:8080/ipfs/${cid}`;
+            const res = await fetch(imageUrl);
+            const imageBlob = await res.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            setImg(imageObjectURL);
+        };
+        fetchImage();
     }, [contractInteraction, courseId])
 
     // when the count of token change, we revalidate the field
@@ -49,6 +64,7 @@ const Token = ({maxToken, tokenAlreadyUsedWithoutThisCourse, name, initialToken,
             disabled={isAlreadyBid}
         >
             <Card className="TokenCard">
+                <img src={img} alt={"cours " + name} width="100px" height="100px"/>
                 <h1 className="TokenTitle">{name}</h1>
                 {isAlreadyBid && <h2>You already bid for this course {initialToken} tokens.</h2>}
                 <div className="TokenBody">

@@ -16,6 +16,7 @@ contract CourseSelectionSystem{
 
     struct CourseInfo{//basic info of one course
         uint courseId;
+        string CID;
         string courseName;
         uint Nstudent;
         bool isFinshed; 
@@ -43,6 +44,10 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
+    function getImageCid(uint _courseId) public view returns (string memory) {
+        return recordInfo[_courseId].CID;
+    }
+
     function getDeadline() public view returns (uint) {
         return startTime + duration*60;
 	}
@@ -59,9 +64,10 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
-    function addCourse(string memory _name, uint _Nstudent) public isAdmin {
+    function addCourse(string memory _name, uint _Nstudent, string memory _cid) public isAdmin {
         CourseInfo memory course = CourseInfo(
             courseCount,
+            _cid,
             _name, 
             _Nstudent,
             false
