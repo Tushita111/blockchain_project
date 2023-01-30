@@ -13,7 +13,7 @@ const coursesName: string[] = [
     "Programming in C and C++",
     "Data Structures and Algorithms",
     "Machine learning",
-    "Microprocessors and Microcontroller Systems",
+    "Microprocessors and Microcontrollers",
     "Computer Networks",
     "Operating Systems",
     /*"Database Systems",

@@ -111,7 +111,7 @@ const Header = () => {
                     </Button>,
                   ]}
             >
-                {cannotConnectToMetaMask && <Alert message="please connect to MetaMask with the right account ! Be sure to check it is selectionned" type="error" />}
+                {cannotConnectToMetaMask && <Alert message="please connect to MetaMask with the right account ! Be sure to check it is selected" type="error" />}
                 <Form
                     form={form}
                     layout="inline"
