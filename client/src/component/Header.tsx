@@ -41,6 +41,7 @@ const Header = () => {
                     search: searchParams.toString(),
                 }
             ),
+            disabled : contractInteraction.deadline.getTime() >= Date.now()
         },
     ];
 

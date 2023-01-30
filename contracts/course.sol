@@ -43,6 +43,10 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
+    function getDeadline() public view returns (uint) {
+        return startTime + duration*60;
+	}
+
     function getCourseBidList(address student_addr) public view returns (uint[] memory) {
         uint[] memory courseList = new uint[](courseCount);
         for(uint i=0;i<courseCount;i++){

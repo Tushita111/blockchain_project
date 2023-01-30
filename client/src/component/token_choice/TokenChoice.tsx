@@ -81,7 +81,7 @@ const TokenChoice = () => {
         <div>
             {address && <>
                 <div className="TimerDiv">
-                    <Timer endTime={new Date("2023-12-31T23:59:59")}></Timer>
+                    <Timer endTime={contractInteraction.deadline}></Timer>
                 </div>
                 <List
                     grid={{ 

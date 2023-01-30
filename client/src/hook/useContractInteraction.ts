@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Web3 from "web3";
 import contractInfo from "../CourseSelectionSystem.json";
@@ -17,6 +17,7 @@ interface ContractInfoInterface {
 
 interface ContractInteractionInterface {
     address: string | null;
+    deadline: Date;
     // contract interaction with user (not doing anything if no address is set)
     bidCourse(courseId: number, bidPrice: number): Promise<void>;
     isAlreadyBid(courseId: number): Promise<boolean | null>;
@@ -33,6 +34,7 @@ const contractInfoType = contractInfo as ContractInfoInterface;
 const web3 = new Web3(Web3.givenProvider);
 const contractAddress = contractInfoType.networks["5777"].address;
 const contractAbi = contractInfo.abi;
+const contract = new web3.eth.Contract(contractAbi as any, contractAddress);
 
 async function checkAddress(address : string) : Promise<boolean> {
     if(address.length === 42 && address.startsWith("0x")){
@@ -47,7 +49,10 @@ async function checkAddress(address : string) : Promise<boolean> {
 }
 
 function useContractInteraction() : ContractInteractionInterface {
+    const [deadline, setDeadline] = useState<Date | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
+
+    
 
     const address = useMemo(
         () => {
@@ -58,11 +63,19 @@ function useContractInteraction() : ContractInteractionInterface {
             }
         },
         [searchParams]
-    )
+    );
+
+    useEffect(() => {
+        const getDeadline = async () => {
+            const deadline = await contract.methods.getDeadline().call(); // in minute
+            const deadlineDate = new Date(deadline * 1000);
+            setDeadline(deadlineDate);
+        };
+        getDeadline();
+    }, []);
+    
 
     const returnValue = useMemo(() => {
-        const contract = new web3.eth.Contract(contractAbi as any, contractAddress);
-
         const bidCourse = async (courseId: number, bidPrice: number) => {
             if(address && await checkAddress(address)){
                 await contract.methods.bid_course(courseId).send({from: address, value: bidPrice});;
@@ -125,6 +138,7 @@ function useContractInteraction() : ContractInteractionInterface {
 
         return {
             address,
+            deadline : deadline ? deadline : new Date(0),
 
             bidCourse,
             isAlreadyBid,
@@ -135,7 +149,7 @@ function useContractInteraction() : ContractInteractionInterface {
             isAddressSet,
             getAddress
         };
-    }, [address, searchParams, setSearchParams]);
+    }, [address, deadline, searchParams, setSearchParams]);
 
     return returnValue;
 }
