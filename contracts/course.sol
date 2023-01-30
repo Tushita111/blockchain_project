@@ -2,7 +2,6 @@
 pragma solidity>=0.5.2;
 
 contract CourseSelectionSystem{
-    address public admin;
     uint public courseCount;
     uint public startTime;
     uint public duration;//unit:minute
@@ -26,12 +25,7 @@ contract CourseSelectionSystem{
     constructor(uint _duration) public {
         startTime = block.timestamp;
         duration = _duration;
-        admin=msg.sender;
         courseCount = 0;
-    }
-
-    modifier isAdmin(){//check if the action is legal
-        if (msg.sender == admin) _;
     }
 
     function getCourseList(address student_addr) public view returns (bool[] memory) {
@@ -64,7 +58,7 @@ contract CourseSelectionSystem{
         return courseList;
 	}
 
-    function addCourse(string memory _name, uint _Nstudent, string memory _cid) public isAdmin {
+    function addCourse(string memory _name, uint _Nstudent, string memory _cid) public {
         CourseInfo memory course = CourseInfo(
             courseCount,
             _cid,
@@ -111,21 +105,5 @@ contract CourseSelectionSystem{
             return true;
         }
         return false;
-    }
-    
-    function endSelection(uint _courseId) public payable isAdmin {
-        CourseInfo storage courseinfo = recordInfo[_courseId];
-        require(block.timestamp>startTime+duration*60,"Can't close the selection in advance.");
-        require(!courseinfo.isFinshed,"The selection is already finished.");
-        courseinfo.isFinshed=true;
-    }
-
-    //for debug
-    event Test(uint256 w);
-    function test(uint _courseId) public{
-        CourseInfo storage courseinfo = recordInfo[_courseId];
-        for(uint256 i=0;i<courseinfo.Nstudent;i++){
-            emit Test(recordBid[_courseId][i].amount);
-        }
     }
 }
