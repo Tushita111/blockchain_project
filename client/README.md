@@ -13,3 +13,7 @@ Also, you must copy/paste the file ./build/contracts/CourseSelectionSystem.json 
 
 # the requestAccount method
 the connection will use MetaMasc address, if the address isn't on it, it will not work.
+
+# Link to ipfs
+
+The image are stored to IPFS. A local instance can be found [here](https://github.com/ipfs/ipfs-desktop/releases).  After the installation, upload the image inside and get the CID. Put the CID of the course into the call of contracts method "add_course".
